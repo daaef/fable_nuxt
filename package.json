@@ -9,7 +9,7 @@
     "generate": "nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "npm run lint:js",
-    "lint:fix":"eslint --fix --ext .vue ."
+    "lint:fix": "eslint --fix --ext .vue ."
   },
   "dependencies": {
     "@nuxtjs/device": "^2.0.0",
