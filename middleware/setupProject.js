@@ -1,5 +1,7 @@
 /* eslint-disable eqeqeq */
-export default function ({ store, redirect, route }) {
-  console.log('Setting up Project.....')
-  store.dispatch('setupProject')
+
+export default async function ({ store, redirect, route }) {
+  if (process.client) {
+    await console.log('Setting up Project.....')
+  }
 }

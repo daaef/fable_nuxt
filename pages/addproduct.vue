@@ -1,37 +1,118 @@
 <template>
-  <section class="main-content">
-    <div class="grid">
-      <vs-row>
-        <vs-col
-          v-for="(product, index) in products"
-          :key="index"
-          class="pr"
-          w="3"
-        >
+  <div class="main-content">
+    <h3 class="mb-10">Add Product</h3>
+    <div class="add--products row">
+      <div
+        class="vs-col--lg-7 vs-col--sm-6 vs-col--xs-12 order-2 product--form"
+      >
+        <div class="mb-10 p-10 mt-10">
+          <vs-input
+            v-model="firstname"
+            state="dark"
+            label-placeholder="First Name"
+          />
+        </div>
+        <div class="mb-10 p-10">
+          <vs-input
+            v-model="lastname"
+            state="dark"
+            label-placeholder="Last Name"
+          />
+        </div>
+        <div class="mb-10 p-10">
+          <vs-select label-placeholder="Select Product" v-model="category">
+            <vs-option label="Banana" value="banana"> Banana </vs-option>
+            <vs-option label="Brown Beans" value="brownbeans">
+              Brown Beans
+            </vs-option>
+            <vs-option label="Cassava" value="casava"> Cassava </vs-option>
+            <vs-option label="Dates" value="dates"> Dates </vs-option>
+            <vs-option label="Groundnut" value="groundnut">
+              Groundnut
+            </vs-option>
+            <vs-option label="Maize" value="maize"> Maize </vs-option>
+            <vs-option label="Plantain" value="plantain"> Plantain </vs-option>
+            <vs-option label="Rice" value="rice"> Rice </vs-option>
+            <vs-option label="Strawberry" value="strawberry">
+              Strawberry
+            </vs-option>
+            <vs-option label="Tomatoes" value="tomatoes"> Tomatoes </vs-option>
+            <vs-option label="White Beans" value="whitebeans">
+              White Beans
+            </vs-option>
+            <vs-option label="Yam" value="yam"> Yam </vs-option>
+          </vs-select>
+        </div>
+        <div class="mb-10 p-10 mt-10">
+          <vs-input
+            v-model="company"
+            state="dark"
+            label-placeholder="Company"
+          />
+        </div>
+        <div class="mb-10 p-10">
+          <vs-input
+            v-model="location"
+            state="dark"
+            label-placeholder="location"
+          />
+        </div>
+        <div class="mb-10 p-10 mt-10">
+          <vs-input v-model="price" state="dark" label-placeholder="Price" />
+        </div>
+        <div class="mb-10 p-10">
+          <vs-input
+            v-model="discount"
+            state="dark"
+            type="number"
+            label-placeholder="Discount"
+          />
+        </div>
+        <div class="p-10">
+          <vs-button class="vs-col--lg-12" @click="addProduct" success>
+            Add Product
+          </vs-button>
+        </div>
+        <div class="mt-10 check--preview">Check preview above</div>
+      </div>
+      <div
+        class="vs-col--lg-5 vs-col--sm-6 p-15 vs-col--xs-12 order-1 product--preview"
+      >
+        <h3 class="mb-10">Product Preview</h3>
+        <div class="mb-10 p-10 mt-10">
           <vs-card>
             <template #title>
-              <h3>{{ product.company }}</h3>
+              <h3>{{ company }}</h3>
             </template>
             <template #img>
-              <img :src="images[`${product.desc.toLowerCase()}`]" alt="" />
+              <LazyImage v-if="category" :src="imageUrl" />
             </template>
             <template #text>
-              <p>{{ product.farmer }}</p>
-              <p class="light">{{ product.location }}</p>
+              <p>{{ farmer }}</p>
+              <p class="light">
+                {{ location }}
+              </p>
             </template>
             <template #interactions>
               <vs-button danger icon>
-                <i class="bx bx-heart"></i>
+                <i class="bx bx-heart" />
               </vs-button>
               <vs-button class="btn-chat" shadow primary>
-                <span class="span"> {{ product.price | doubleForm }} </span>
+                <span class="span"> {{ price | doubleForm }} </span>
+              </vs-button>
+              <vs-button
+                v-if="discount && !!Number(discount)"
+                class="btn-discount"
+                danger
+              >
+                <span class="span"> -{{ Number(discount) }}% </span>
               </vs-button>
             </template>
           </vs-card>
-        </vs-col>
-      </vs-row>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -40,72 +121,75 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      images: null,
+      firstname: '',
+      lastname: '',
+      category: '',
+      company: '',
+      discount: 0,
+      location: '',
+      price: '',
     }
   },
   computed: {
     user() {
       return this.$store.state.authUser
     },
+    farmer() {
+      return `${this.firstname} ${this.lastname}`
+    },
+    desc() {
+      return `${this.category[0].toUpperCase()}${this.category.slice(1)}`
+    },
+    image() {
+      return `gs://fable-c0c36.appspot.com/${this.category}.png`
+    },
+    imageUrl() {
+      if (this.categories) {
+        return this.categories[`${this.category}`]
+      } else {
+        return ''
+      }
+    },
     ...mapGetters({
-      products: 'products',
+      categories: 'categories',
     }),
   },
-  async mounted() {
-    // console.log('loging storage', this.$fire.storage.ref('banana.png'))
-    const images = {
-      banana: await this.$fire.storage.ref('banana.png').getDownloadURL(),
-      brownbeans: await this.$fire.storage
-        .ref('brownbeans.png')
-        .getDownloadURL(),
-      casava: await this.$fire.storage.ref('casava.png').getDownloadURL(),
-      dates: await this.$fire.storage.ref('dates.png').getDownloadURL(),
-      groundnut: await this.$fire.storage.ref('groundnut.png').getDownloadURL(),
-      maize: await this.$fire.storage.ref('maize.png').getDownloadURL(),
-      plantain: await this.$fire.storage.ref('plantain.png').getDownloadURL(),
-      rice: await this.$fire.storage.ref('rice.png').getDownloadURL(),
-      tomatoes: await this.$fire.storage.ref('tomatoes.png').getDownloadURL(),
-      strawberry: await this.$fire.storage
-        .ref('strawberry.png')
-        .getDownloadURL(),
-      whitebeans: await this.$fire.storage
-        .ref('whitebeans.png')
-        .getDownloadURL(),
-      yam: await this.$fire.storage.ref('yam.png').getDownloadURL(),
-    }
-    this.images = images
-    this.$fire.firestore
-      .collection('products')
-      .get()
-      .then((snapshot) => {
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-
-        this.$store.commit('setProducts', data)
-        // [ { id: 'glMeZvPpTN1Ah31sKcnj', title: 'The Great Gatsby' } ]
-      })
+  methods: {
+    resetFields() {
+      this.firstname = ''
+      this.lastname = ''
+      this.category = ''
+      this.company = ''
+      this.discount = 0
+      this.location = ''
+      this.price = ''
+    },
+    addProduct() {
+      console.log('adding product to DB......')
+      this.$fire.firestore
+        .collection('products')
+        .add({
+          company: this.company,
+          desc: this.desc,
+          discount: this.discount,
+          farmer: this.farmer,
+          image: this.image,
+          location: this.location,
+          price: this.price,
+        })
+        .then((addedData) => {
+          this.resetFields()
+          console.log('added Data is ', addedData)
+          this.$vs.notification({
+            color: '#4c7900',
+            title: 'Product Added!',
+            text: `${this.desc} added successfully`,
+          })
+        })
+    },
   },
-  layout: 'default',
 }
 </script>
-<style>
-.main-content {
-  width: 100%;
-  padding: 40px 40px 40px 300px;
-  height: 100vh;
-}
-
-.pr {
-  padding-right: 10px;
-}
-
-.light {
-  font-weight: 300;
-  opacity: 0.5;
-}
-</style>
 
 <!--
 company:"Gyang Farms"

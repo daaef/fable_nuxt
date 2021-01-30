@@ -1,30 +1,27 @@
 <template>
-  <div class="main-bg">
+  <section class="main-bg">
+    <Navbar v-if="!desktop" />
     <Sidebar />
     <Nuxt />
-  </div>
+  </section>
 </template>
 
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
-}
-.main-bg {
-  background: var(--vs-theme-layout);
-}
-</style>
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  mounted() {
-    // $colorMode.preference
+  async mounted() {
     this.$vs.setTheme(this.$colorMode.preference)
+    await this.$store.dispatch('setupProject')
     this.$nextTick(() => {
       this.$nuxt.$loading.start()
       setTimeout(() => this.$nuxt.$loading.finish(), 500)
     })
+  },
+  computed: {
+    ...mapGetters({
+      desktop: 'desktop',
+    }),
   },
 }
 </script>
