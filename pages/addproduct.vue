@@ -130,6 +130,10 @@ export default {
       price: '',
     }
   },
+  async fetch() {
+    console.log('running fetch')
+    await this.$store.dispatch('setupProject')
+  },
   computed: {
     user() {
       return this.$store.state.authUser
