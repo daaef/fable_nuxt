@@ -21,7 +21,9 @@
     </nuxt-link>
     <template #footer>
       <vs-row justify="space-between">
-        <vs-avatar>{{ user.displayName[0].toUpperCase() }}</vs-avatar>
+        <vs-avatar v-if="user.displayName">{{
+          user.displayName[0].toUpperCase()
+        }}</vs-avatar>
         <vs-button @click="logOut"> Logout </vs-button>
       </vs-row>
     </template>

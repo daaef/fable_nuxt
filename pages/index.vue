@@ -44,6 +44,10 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  async fetch() {
+    console.log('running fetch')
+    await this.$store.dispatch('setupProject')
+  },
   computed: {
     ...mapGetters({
       user: 'user',

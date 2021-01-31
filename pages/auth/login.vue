@@ -3,7 +3,8 @@
     <div class="flex-centered">
       <div class="login-card">
         <img class="logo" src="~/assets/img/logo.png" alt="" />
-        <div class="mt-input">
+        <h3 class="mb-20">Login To Your Account</h3>
+        <div class="mt-input mt-10">
           <vs-input v-model="email" type="email" label-placeholder="Email">
             <template #icon>
               <i class="bx bx-user" />
@@ -40,6 +41,11 @@
 
         <div class="mt-sub--button">
           <vs-button @click.prevent="login"> Submit </vs-button>
+        </div>
+        <div class="mt-10">
+          <nuxt-link to="/auth/signup">
+            Don't have an account? Sign Up
+          </nuxt-link>
         </div>
       </div>
     </div>
